@@ -1,10 +1,8 @@
 from fastapi import FastAPI, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 from hellosign_sdk import HSClient
-
 from pymongo.mongo_client import MongoClient
 
-MongoC = MongoClient('mongodb+srv://chethanreddy123:12345@cluster0.dix8btt.mongodb.net/?retryWrites=true&w=majority')
 
 import joblib
 import json
@@ -16,6 +14,8 @@ from datetime import date
 
 
 client = HSClient(api_key='a65d631bc7a875990682b67ac1cc37ca0aef34ab537b52d57bddb4f633afb7a2')
+MongoC = MongoClient('mongodb+srv://chethanreddy123:12345@cluster0.dix8btt.mongodb.net/?retryWrites=true&w=majority')
+
 
 
 app = FastAPI()
@@ -28,56 +28,41 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+
 @app.post("/sendform")
 async def getInformation(info : Request):
+
     print(await info.body())
     infoDict = await info.json()
-
     MyData = MongoC['HelloSign']['PrescriptionDetails']
-
     MyData.insert_one(dict(infoDict))
 
     pdf = FPDF()
     pdf.add_page()
-
-
     pdf.set_font("Times", size = 15)
     pdf.cell(200, 10, txt = "Hello Doc",
     ln = 1 , align='C')
 
     curr_time = time.localtime()
-
     curr_clock = time.strftime("%H:%M:%S", curr_time)
-
     today = date.today()
-
   
-
     pdf.cell(200, 10, txt = str(today),
        ln = 2, align='R')
-
     pdf.cell(200, 10, txt = str(curr_clock),
         ln = 2, align='R')
-
     pdf.cell(200, 10, txt = "Doctors Details:",
         ln = 1)
-
-
-
-
-
     pdf.cell(200, 10, txt = infoDict['DoctorName'],
-    ln = 1)
+        ln = 1)
     pdf.cell(200, 10, txt = infoDict['DoctorInfo'],
-    ln = 2)
+        ln = 2)
     pdf.cell(200, 10, txt = infoDict['DoctorNo'],
-    ln = 2)
+        ln = 2)
     pdf.cell(200, 10, txt = infoDict['DoctorEmail'],
-    ln = 2)
-
+        ln = 2)
     pdf.cell(200, 10, txt = "\n\n\n", ln = 2)
-
-      
     pdf.cell(200, 10, txt = "Medications: ",ln = 2)
 
     for i in range(len(infoDict['Medication'])):
@@ -89,6 +74,8 @@ async def getInformation(info : Request):
 
     pdf.cell(200, 10, txt = "To,", ln = 2)
     pdf.cell(200, 10, txt = "Patient Name: " + infoDict['PatientName'], ln = 2)
+    pdf.cell(200, 10, txt = "Patient Gender: " + infoDict['PatientGender'], ln = 2)
+    pdf.cell(200, 10, txt = "Patient Age: " + infoDict['PatientAge'], ln = 2)
     pdf.cell(200, 10, txt = "Patient Email: " + infoDict["PatientEmail"] , ln = 2)
 
     file_path = infoDict['PatientName'] + ".pdf"
