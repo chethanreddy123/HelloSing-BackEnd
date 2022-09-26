@@ -44,6 +44,28 @@ async def getInformation(info : Request):
     pdf.set_font("Times", size = 15)
     pdf.cell(200, 10, txt = "Hello Doc",
     ln = 1 , align='C')
+
+    curr_time = time.localtime()
+
+    curr_clock = time.strftime("%H:%M:%S", curr_time)
+
+    today = date.today()
+
+  
+
+    pdf.cell(200, 10, txt = str(today),
+       ln = 2, align='R')
+
+    pdf.cell(200, 10, txt = str(curr_clock),
+        ln = 2, align='R')
+
+    pdf.cell(200, 10, txt = "Doctors Details:",
+        ln = 1)
+
+
+
+
+
     pdf.cell(200, 10, txt = infoDict['DoctorName'],
     ln = 1)
     pdf.cell(200, 10, txt = infoDict['DoctorInfo'],
@@ -52,20 +74,11 @@ async def getInformation(info : Request):
     ln = 2)
     pdf.cell(200, 10, txt = infoDict['DoctorEmail'],
     ln = 2)
-  
-  
 
-    curr_time = time.localtime()
-    curr_clock = time.strftime("%H:%M:%S", curr_time)
-    today = date.today()
+    pdf.cell(200, 10, txt = "\n\n\n", ln = 2)
 
-    pdf.cell(200, 10, txt = str(today),
-    ln = 2, align='R')
-
-    pdf.cell(200, 10, txt = str(curr_clock),
-    ln = 2, align='R')
-  
-  
+      
+    pdf.cell(200, 10, txt = "Medications: ",ln = 2)
 
     for i in range(len(infoDict['Medication'])):
         pdf.cell(200, 10, txt = " - ".join(infoDict['Medication'][i]), ln = 2)
@@ -132,7 +145,9 @@ async def newRegistration(info : Request):
         return {"Status" : "User Doesn't exists"}
 
     if Check[0]['Password'] == infoDict['Password']:
-        return {"Status" :  "Successfully Logged!"} 
+        del Check[0]['_id']
+        
+        return Check[0]
     else:
         return {"Status" : "Incorrect Password!!"}
 

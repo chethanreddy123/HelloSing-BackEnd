@@ -6,7 +6,7 @@ infoDict = {
     "PatientName" : "Jack",
     "PatientEmail" : "chethan.tekie@gmail.com",
     "DoctorName" : "Dr. Rajesh",
-    "DoctorInfo" : "M.B.B.S M.D, M.S | RegNO: 2000234",
+    "DoctorInfo" : "M.B.B.S M.D, M.S",
     "DoctorNo" : "9924352433",
     "DoctorEmail" : "chethan.campk12@gmail.com",
     "Medication" : [
@@ -23,8 +23,28 @@ pdf.add_page()
 
 pdf.set_font("Times", size = 15)
 
+
 pdf.cell(200, 10, txt = "Hello Doc",
     ln = 1 , align='C')
+
+curr_time = time.localtime()
+
+curr_clock = time.strftime("%H:%M:%S", curr_time)
+
+today = date.today()
+
+
+print("Today date is: ", today)
+  
+
+pdf.cell(200, 10, txt = str(today),
+    ln = 2, align='R')
+
+pdf.cell(200, 10, txt = str(curr_clock),
+    ln = 2, align='R')
+
+pdf.cell(200, 10, txt = "Doctors Details:",
+    ln = 1)
 pdf.cell(200, 10, txt = infoDict['DoctorName'],
     ln = 1)
 pdf.cell(200, 10, txt = infoDict['DoctorInfo'],
@@ -36,24 +56,11 @@ pdf.cell(200, 10, txt = infoDict['DoctorEmail'],
   
   
 
-curr_time = time.localtime()
-
-curr_clock = time.strftime("%H:%M:%S", curr_time)
-
-today = date.today()
+pdf.cell(200, 10, txt = "\n\n\n", ln = 2)
 
 
-print("Today date is: ", today)
   
-print(curr_clock)
-
-pdf.cell(200, 10, txt = str(today),
-    ln = 2, align='R')
-
-pdf.cell(200, 10, txt = str(curr_clock),
-    ln = 2, align='R')
-  
-  
+pdf.cell(200, 10, txt = "Medications: ",ln = 2)
 
 for i in range(len(infoDict['Medication'])):
     pdf.cell(200, 10, txt = " - ".join(infoDict['Medication'][i]), ln = 2)
@@ -64,6 +71,8 @@ pdf.cell(200, 10, txt = "\n\n\n", ln = 2)
 
 
 pdf.cell(200, 10, txt = "Note: " + infoDict["AdditionalInfo"], ln = 2)
+pdf.cell(200, 10, txt = "\n\n\n", ln = 2)
+
 
 pdf.cell(200, 10, txt = "To,", ln = 2)
 pdf.cell(200, 10, txt = "Patient Name: " + infoDict['PatientName'], ln = 2)
